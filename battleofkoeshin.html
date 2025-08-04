@@ -27,7 +27,7 @@
       var originalSendMessage = unityInstance.SendMessage;      
       unityInstance.SendMessage("ClientBridge", "SetTelemetryUrl", "");
 	  //Set Mission, we only need to set the 1 for the petals so... sorry hardcoding it
-	  //TODO: Send Mission
+	  unityInstance.SendMessage("ClientBridge", "SetMissions", "[{\"internalName\":\"Bloom_GivePetal_1_Hidden\",\"status\":\"SELECT_REWARDS\"}]");
       //Load cached game data if available
       var cachedData = localStorage.getItem("bloomMinigameData");
       if (cachedData) {
@@ -40,9 +40,34 @@
 		unityInstance.SendMessage("ClientBridge", "SetHubData", "{}");
       }
 	  //Check to see if Spirit Trials has any progress and load each one
+	  //Actually turns out this isn't needed but will be leaving it here just incase.
+	  /*_UpdateSpiritTrialsProgress(unityInstance, "Irelia_Reward_Group", "e22c5db0-8f16-40bc-946a-09670209b168", "9d2f71a2-4116-43f5-9e85-574de503b910");
+	  _UpdateSpiritTrialsProgress(unityInstance, "Karma_Reward_Group", "1c05b69a-ed65-450a-a71b-e11d79fac86e", "86243285-3f29-40dc-b586-ddbd373328bc");
+	  _UpdateSpiritTrialsProgress(unityInstance, "Kayle_Reward_Group", "7498bf9c-47a5-4505-9cf3-a6bedd6601c5", "b04541c4-8d72-4246-8757-edc0dcb85b70");
+	  _UpdateSpiritTrialsProgress(unityInstance, "Zed_Reward_Group", "3bf2704f-465a-40be-9740-5165cba7fff9", "7e1f5e76-a4ed-4e84-ba65-330d1d960206");*/
     }).catch(function (message) {
       console.error(message);
     });
+	function _UpdateSpiritTrialsProgress(unityInstance, RewardGroup, CounterId, GroupId) {
+		var cachedData = localStorage.getItem(RewardGroup);
+		if(cachedData == null)
+		{
+			//Initialize the Counter:
+			cachedData = 0;
+			localStorage.setItem(RewardGroup, cachedData);
+		}
+		const payload = JSON.stringify({
+			counters:[ {
+				counterId: CounterId,
+				counterValue: cachedData,
+				groupId: GroupId,
+				productId: "d1c2664a-5938-4c41-8d1b-61fd51052c22" //League of Legends Product Id
+			}],
+			groupId: GroupId
+		});
+		console.log(payload);
+		unityInstance.SendMessage("ClientBridge", "SetProgressTrack", payload);
+	};
   </script>
 </body>
 </html>

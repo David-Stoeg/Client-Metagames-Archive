@@ -24,8 +24,21 @@
       productName: "B",
       productVersion: "0.1"
     }).then(function (unityInstance) {
-      var originalSendMessage = unityInstance.SendMessage;
+      var originalSendMessage = unityInstance.SendMessage;      
       unityInstance.SendMessage("ClientBridge", "SetTelemetryUrl", "");
+	  //Set Mission, we only need to set the 1 for the petals so... sorry hardcoding it
+	  unityInstance.SendMessage("ClientBridge", "SetMissions", "[{\"internalName\":\"Bloom_GivePetal_1_Hidden\",\"status\":\"SELECT_REWARDS\"}]");
+      //Load cached game data if available
+      var cachedData = localStorage.getItem("bloomMinigameData");
+      if (cachedData) {
+        console.log("Loading cached game data:");
+        unityInstance.SendMessage("ClientBridge", "SetHubData", cachedData);
+        console.log(cachedData);
+      } else {
+        console.log("No cached game data found.");
+		//We need to send blank data otherwise the metagame won't load for some reason
+		unityInstance.SendMessage("ClientBridge", "SetHubData", "{}");
+      }
     }).catch(function (message) {
       console.error(message);
     });
