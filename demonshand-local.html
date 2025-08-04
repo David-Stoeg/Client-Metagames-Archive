@@ -27,8 +27,8 @@
       var originalSendMessage = unityInstance.SendMessage;
       unityInstance.SendMessage("ClientBridge", "SetTelemetryUrl", "");
       unityInstance.SendMessage("ClientBridge", "SetEventEndDate", "2099-04-29T06:59:00.000Z");
-      _FoundationGetPendingRewards(unityInstance)
-      _SetMissions(unityInstance)
+      _FoundationGetPendingRewards(unityInstance);
+      _SetMissions(unityInstance);
       // Load cached game data if available
       var cachedData = localStorage.getItem("bobaMinigameData");
       if (cachedData) {

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en-us" style="height: 100%; width: 100%;">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>The Battle of Koeshin</title>
+  <link rel="stylesheet" href="unityplayer.css">
+</head>
+<body>
+  <div id="unity-wrapper">
+    <canvas id="unity-canvas" width="1055" height="636" tabindex="-1"></canvas>
+  </div>
+  <script src="./SpiritBlossomBeyond/BattleOfKoeshin/WebGLBuild/Build/WebGLBuild.loader.js"></script>
+  <script>
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "https://assetcdn.rgpub.io/public/live/bundle-offload/09648726-b12b-45db-94b8-2af261880ea4/687db99c9787090008ed0602/WebGLBuild/Build/WebGLBuild.data.gz",
+      frameworkUrl: ".//SpiritBlossomBeyond/BattleOfKoeshin/WebGLBuild/Build/WebGLBuild.framework.js",
+      codeUrl: "https://assetcdn.rgpub.io/public/live/bundle-offload/09648726-b12b-45db-94b8-2af261880ea4/687db99c9787090008ed0602/WebGLBuild/Build/WebGLBuild.wasm.gz",
+      streamingAssetsUrl: "https://assetcdn.rgpub.io/public/live/bundle-offload/09648726-b12b-45db-94b8-2af261880ea4/687db99c9787090008ed0602/WebGLBuild/StreamingAssets",
+      companyName: "A",
+      productName: "B",
+      productVersion: "0.1"
+    }).then(function (unityInstance) {
+      var originalSendMessage = unityInstance.SendMessage;      
+      unityInstance.SendMessage("ClientBridge", "SetTelemetryUrl", "");
+	  //Set Mission, we only need to set the 1 for the petals so... sorry hardcoding it
+	  //TODO: Send Mission
+      //Load cached game data if available
+      var cachedData = localStorage.getItem("bloomMinigameData");
+      if (cachedData) {
+        console.log("Loading cached game data:");
+        unityInstance.SendMessage("ClientBridge", "SetHubData", cachedData);
+        console.log(cachedData);
+      } else {
+        console.log("No cached game data found.");
+		//We need to send blank data otherwise the metagame won't load for some reason
+		unityInstance.SendMessage("ClientBridge", "SetHubData", "{}");
+      }
+	  //Check to see if Spirit Trials has any progress and load each one
+    }).catch(function (message) {
+      console.error(message);
+    });
+  </script>
+</body>
+</html>
