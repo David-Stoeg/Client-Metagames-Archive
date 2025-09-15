@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en-us" style="height: 100%; width: 100%;">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+  <meta http-equiv="Pragma" content="no-cache">
+  <meta http-equiv="Expires" content="0">
+  <title>Tournament of Souls</title>
+  <link rel="stylesheet" href="unityplayer.css">
+</head>
+<body>
+  <div id="unity-wrapper">
+    <canvas id="unity-canvas" width="1055" height="636" tabindex="-1"></canvas>
+  </div>
+  <script src="./TournamentOfSouls/WebGLBuild/Build/WebGLBuild.loader.js"></script>
+  <script>
+    createUnityInstance(document.querySelector("#unity-canvas"), {
+      dataUrl: "./TournamentOfSouls/WebGLBuild/Build/WebGLBuild.data",
+      frameworkUrl: "./TournamentOfSouls/WebGLBuild/Build/WebGLBuild.framework.js",
+      codeUrl: "./TournamentOfSouls/WebGLBuild/Build/WebGLBuild.wasm",
+      streamingAssetsUrl: "./TournamentOfSouls/WebGLBuild/StreamingAssets",
+      companyName: "A",
+      productName: "B",
+      productVersion: "0.1"
+    }).then(function (unityInstance) {
+      unityInstance.SendMessage("ClientBridge", "SetTelemetryUrl", "");
+      // Load cached game data if available
+      var cachedData = localStorage.getItem("soulfighterMinigameData");
+      if (cachedData) {
+        console.log("Loading cached game data:");
+        unityInstance.SendMessage("ClientBridge", "SetMPSData", cachedData);
+        console.log(cachedData);
+      } else {
+        console.log("No cached game data found.");
+		let dataObj = {
+            "loadout_active_q": "1",
+            "loadout_active_w": "1",
+            "loadout_active_e": "1",
+            "loadout_active_r": "1",
+            "progress": "0",
+            "numNodesUnlocked": "0",
+            "hasPlayedTutorial": "False",
+            "hasSeenMapTutorial": "False",
+            "hasSeenLoadoutTutorial": "False",
+            "hasSeenCelebration_Story": "False",
+            "hasSeenCelebration_Expert": "False",
+            "hasNewAbility": "False",
+            "hasNewFanLine": "False",
+            "SmallGwenPykeFan": "",
+            "SmallConspiracyFan": "",
+            "SmallSettFans": "",
+            "SmallJhinFan": "",
+            "SmallShaco": ""
+        };
+		var initializedSettings = JSON.stringify(dataObj);
+		localStorage.setItem("soulfighterMinigameData", initializedSettings);
+		unityInstance.SendMessage("ClientBridge", "SetMPSData", initializedSettings);
+      }
+    }).catch(function (message) {
+      console.error(message);
+    });
+  </script>
+</body>
+</html>
